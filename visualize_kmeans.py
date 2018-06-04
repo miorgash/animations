@@ -1,21 +1,22 @@
 import matplotlib.pyplot as plt
 
-def viz(i, sample_df=None, centroid_df=None):
-    # figure and axes
+def begin():
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
+    return fig, ax
 
-    # plot
-    if sample_df is not None:
-        ax.scatter(x=sample_df['p1'], y=sample_df['p2'], c=sample_df['cls'],
-                   cmap='tab10', s=100, alpha=0.4, marker='o')
 
-    if centroid_df is not None:
-        ax.scatter(x=centroid_df['p1'], y=centroid_df['p2'], c=centroid_df['cls'],
-                   cmap='tab10', s=600, alpha=0.8, marker='x')
+def viz_samples(ax, df):
+    ax.scatter(x=df['p1'], y=df['p2'], c=df['cls'],
+               cmap='tab10', s=100, alpha=0.4, marker='o')
 
-    # visualize
-    # plt.show()
+
+def viz_centroids(ax, df):
+    ax.scatter(x=df['p1'], y=df['p2'], c=df['cls'],
+               cmap='tab10', s=600, alpha=0.8, marker='x')
+
+
+def save(fig, i):
     fig.savefig('fig/figure_{0:02d}.png'.format(i))
     plt.close()
 

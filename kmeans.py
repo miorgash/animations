@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from numpy import random
-from visualize_kmeans import viz, generate_seq
+from visualize_kmeans import generate_seq, begin, viz_samples, viz_centroids, save
 
 def mkmeans(feature_df, feature_list):
 
@@ -66,14 +66,16 @@ def mkmeans(feature_df, feature_list):
     isfirst = True
     seq = generate_seq()
 
-    # initialize class  (random)
+    # initialize class (random)
     sample_df = init_class(feature_df)
 
     # repeat attempts
     while not match:
 
         # old class
-        viz(seq.__next__(), sample_df=sample_df)
+        fig, ax = begin()
+        viz_samples(ax, sample_df)
+        save(fig, seq.__next__())
 
         if isfirst:
             # calculate centroids
@@ -89,10 +91,18 @@ def mkmeans(feature_df, feature_list):
             match = evaluate(old_centroid_df, centroid_df)
 
         # new centroid / old class
-        viz(seq.__next__(), sample_df=sample_df, centroid_df=centroid_df)
+        fig, ax = begin()
+        viz_samples(ax, sample_df)
+        viz_centroids(ax, centroid_df)
+        save(fig, seq.__next__())
 
         # classify
         sample_df = assign_to_class(feature_df, centroid_df)
-        viz(seq.__next__(), sample_df=sample_df, centroid_df=centroid_df)  # new centroid / new class
+
+        # new centroid / new class
+        fig, ax = begin()
+        viz_samples(ax, sample_df)
+        viz_centroids(ax, centroid_df)
+        save(fig, seq.__next__())
 
     return sample_df
