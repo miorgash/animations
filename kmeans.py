@@ -8,38 +8,34 @@ def mkmeans(feature_df, feature_list):
 
     def init_class(feature_df, n=3):
 
-        sample_df = feature_df.assign(cls=random.randint(0, n, feature_df.shape[0]))
-
-        return sample_df
+        return list(random.randint(0, n, feature_df.shape[0]))
 
 
-    def assign_to_class(feature_df, centroid_df):
-
-        cols = feature_df.columns
+    def classify(feature_df, centroid_df):
 
         product_df = pd.merge(
             feature_df \
                 .reset_index() \
-                .assign(dummy_key='dummy') \
-                .rename(columns={cols[0]: 'p1', cols[1]: 'p2'}),
+                .assign(dummy_key='dummy'),
             centroid_df \
-                .assign(dummy_key='dummy') \
-                .rename(columns={cols[0]: 'q1', cols[1]: 'q2'}),
+                .reset_index() \
+                .rename(columns={'index': 'cls'}) \
+                .assign(dummy_key='dummy'),
             on='dummy_key', how='inner').drop(labels=['dummy_key'], axis=1)
 
         # calculate euclidean distance
         euc_df = product_df.assign(euc=product_df.apply(
-            lambda x: np.sqrt((x['p1'] - x['q1']) ** 2 + (x['p2'] - x['q2']) ** 2), axis=1))
+            lambda x: np.sqrt((x.iloc[1] - x.iloc[4]) ** 2 + (x.iloc[2] - x.iloc[5]) ** 2), axis=1))
 
-        sample_df = euc_df[euc_df['euc'] == euc_df.groupby(by='index')['euc'] \
-            .transform(min)][['p1', 'p2', 'cls']]
+        classes = list(euc_df[euc_df['euc'] == euc_df.groupby(by='index')['euc'] \
+            .transform(min)].iloc[:, 3])
 
-        return sample_df
+        return classes
 
 
-    def calc_centroids(sample_df):
+    def calc_centroids(feature_df, classes):
 
-        return sample_df.groupby(by=['cls'])[['p1', 'p2']].mean().reset_index()
+        return feature_df.groupby(by=classes).mean()
 
 
     def evaluate(old_centroid_df, centroid_df):
@@ -62,47 +58,44 @@ def mkmeans(feature_df, feature_list):
 
     # rename columns
     feature_df = feature_df.loc[:, feature_list]
-    feature_df.rename(
-        columns={feature_list[0]: 'p1', feature_list[1]: 'p2'},
-        inplace=True)
 
     # initialize class (random)
-    sample_df = init_class(feature_df)
+    classes = init_class(feature_df)
 
     # repeat attempts
     while not match:
 
         # old class
         fig, ax = begin()
-        viz_samples(ax, sample_df[['p1', 'p2']], sample_df['cls'])
+        viz_samples(ax, feature_df, classes)
         save(fig, seq.__next__())
 
         if isfirst:
             # calculate centroids
-            centroid_df = calc_centroids(sample_df)
+            centroid_df = calc_centroids(feature_df, classes)
             isfirst = False
 
         else:
             # calculate centroids
             old_centroid_df = centroid_df
-            centroid_df = calc_centroids(sample_df)
+            centroid_df = calc_centroids(feature_df, classes)
 
             # evaluate the attempt
             match = evaluate(old_centroid_df, centroid_df)
 
         # new centroid / old class
         fig, ax = begin()
-        viz_samples(ax, sample_df[['p1', 'p2']], sample_df['cls'])
-        viz_centroids(ax, centroid_df[['p1', 'p2']], centroid_df['cls'])
+        viz_samples(ax, feature_df, classes)
+        viz_centroids(ax, centroid_df, centroid_df.index)
         save(fig, seq.__next__())
 
         # classify
-        sample_df = assign_to_class(feature_df, centroid_df)
+        classes = classify(feature_df, centroid_df)
 
         # new centroid / new class
         fig, ax = begin()
-        viz_samples(ax, sample_df[['p1', 'p2']], sample_df['cls'])
-        viz_centroids(ax, centroid_df[['p1', 'p2']], centroid_df['cls'])
+        viz_samples(ax, feature_df, classes)
+        viz_centroids(ax, centroid_df, centroid_df.index)
         save(fig, seq.__next__())
 
-    return sample_df
+    return feature_df.assign(cls=classes)
