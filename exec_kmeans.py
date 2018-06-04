@@ -1,8 +1,10 @@
 import pandas as pd
 from sklearn import datasets
-from kmeans import make_gif, delete_png, mkmeans
+from kmeans import mkmeans
+from make_gif import make_gif, delete_png
 
 if __name__ == '__main__':
+
     # load data
     wine = datasets.load_wine()
     wine_df = pd.DataFrame(wine.data, columns=wine.feature_names)
