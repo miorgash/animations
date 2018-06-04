@@ -6,10 +6,6 @@ from visualize_kmeans import viz, generate_seq
 
 def mkmeans(feature_df, feature_list):
 
-    # setting
-    sns.set_style('darkgrid')
-    sns.set_context('paper')
-
     def init_class(feature_df, n=3):
 
         sample_df = feature_df.assign(cls=random.randint(0, n, feature_df.shape[0]))
@@ -55,6 +51,10 @@ def mkmeans(feature_df, feature_list):
     # main process
     # *
 
+    # figures' setting
+    sns.set_style('darkgrid')
+    sns.set_context('paper')
+
     # rename columns
     feature_df = feature_df.loc[:, feature_list]
     feature_df.rename(
@@ -66,42 +66,33 @@ def mkmeans(feature_df, feature_list):
     isfirst = True
     seq = generate_seq()
 
-    # initialize centroids; random
-    print('initialize classes')
+    # initialize class  (random)
     sample_df = init_class(feature_df)
-
-    # initial centroids
-    viz(seq.__next__(), sample_df=sample_df)
 
     # repeat attempts
     while not match:
 
+        # old class
+        viz(seq.__next__(), sample_df=sample_df)
+
         if isfirst:
-            print('initialize centroids')
+            # calculate centroids
             centroid_df = calc_centroids(sample_df)
             isfirst = False
 
-            # plot --
-            viz(seq.__next__(), sample_df=sample_df, centroid_df=centroid_df)
-            # -- plot
-
         else:
-            print('calculate centroids again')
+            # calculate centroids
             old_centroid_df = centroid_df
             centroid_df = calc_centroids(sample_df)
+
+            # evaluate the attempt
             match = evaluate(old_centroid_df, centroid_df)
 
-            # plot --
-            viz(seq.__next__(), sample_df=sample_df)
-            viz(seq.__next__(), sample_df=sample_df, centroid_df=centroid_df)
-            # -- plot
-
-        # classify again
-        print('classify again')
-        sample_df = assign_to_class(feature_df, centroid_df)
-
-        # plot --
+        # new centroid / old class
         viz(seq.__next__(), sample_df=sample_df, centroid_df=centroid_df)
-        # -- plot
+
+        # classify
+        sample_df = assign_to_class(feature_df, centroid_df)
+        viz(seq.__next__(), sample_df=sample_df, centroid_df=centroid_df)  # new centroid / new class
 
     return sample_df
