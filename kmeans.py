@@ -5,7 +5,6 @@ import seaborn as sns
 import pathlib as pl
 from PIL import Image
 from numpy import random
-from sklearn import datasets
 sns.set_style('darkgrid')
 sns.set_context('poster')
 
@@ -153,18 +152,3 @@ def mkmeans(feature_df, feature_list):
         # -- plot
 
     return sample_df
-
-
-if __name__ == '__main__':
-    # load data
-    wine = datasets.load_wine()
-    wine_df = pd.DataFrame(wine.data, columns=wine.feature_names)
-
-    # execute
-    sample_df = mkmeans(wine_df, ['alcohol', 'flavanoids'])
-
-    # make GIF
-    make_gif('fig/kmeans.gif')
-
-    # delete png
-    delete_png('fig')
