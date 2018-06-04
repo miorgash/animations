@@ -7,12 +7,12 @@ def begin():
 
 
 def viz_samples(ax, df, c=None):
-    ax.scatter(x=df['p1'], y=df['p2'], c=c,
+    ax.scatter(x=df.iloc[:, 0], y=df.iloc[:, 1], c=c,
                cmap='tab10', s=100, alpha=0.4, marker='o')
 
 
 def viz_centroids(ax, df, c=None):
-    ax.scatter(x=df['p1'], y=df['p2'], c=c,
+    ax.scatter(x=df.iloc[:, 0], y=df.iloc[:, 1], c=c,
                cmap='tab10', s=600, alpha=0.8, marker='x')
 
 
