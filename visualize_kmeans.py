@@ -6,13 +6,13 @@ def begin():
     return fig, ax
 
 
-def viz_samples(ax, df):
-    ax.scatter(x=df['p1'], y=df['p2'], c=df['cls'],
+def viz_samples(ax, df, c=None):
+    ax.scatter(x=df['p1'], y=df['p2'], c=c,
                cmap='tab10', s=100, alpha=0.4, marker='o')
 
 
-def viz_centroids(ax, df):
-    ax.scatter(x=df['p1'], y=df['p2'], c=df['cls'],
+def viz_centroids(ax, df, c=None):
+    ax.scatter(x=df['p1'], y=df['p2'], c=c,
                cmap='tab10', s=600, alpha=0.8, marker='x')
 
 
