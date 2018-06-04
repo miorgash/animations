@@ -74,7 +74,7 @@ def mkmeans(feature_df, feature_list):
 
         # old class
         fig, ax = begin()
-        viz_samples(ax, sample_df, sample_df['cls'])
+        viz_samples(ax, sample_df[['p1', 'p2']], sample_df['cls'])
         save(fig, seq.__next__())
 
         if isfirst:
@@ -92,8 +92,8 @@ def mkmeans(feature_df, feature_list):
 
         # new centroid / old class
         fig, ax = begin()
-        viz_samples(ax, sample_df, sample_df['cls'])
-        viz_centroids(ax, centroid_df, centroid_df['cls'])
+        viz_samples(ax, sample_df[['p1', 'p2']], sample_df['cls'])
+        viz_centroids(ax, centroid_df[['p1', 'p2']], centroid_df['cls'])
         save(fig, seq.__next__())
 
         # classify
@@ -101,8 +101,8 @@ def mkmeans(feature_df, feature_list):
 
         # new centroid / new class
         fig, ax = begin()
-        viz_samples(ax, sample_df, sample_df['cls'])
-        viz_centroids(ax, centroid_df, centroid_df['cls'])
+        viz_samples(ax, sample_df[['p1', 'p2']], sample_df['cls'])
+        viz_centroids(ax, centroid_df[['p1', 'p2']], centroid_df['cls'])
         save(fig, seq.__next__())
 
     return sample_df
