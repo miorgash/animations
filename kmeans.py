@@ -46,25 +46,25 @@ def mkmeans(feature_df, feature_list):
 
         return (old_centroid_df == centroid_df).all().all()
 
-
-    # **
-    # main process
-    # *
+    
+    # variables and objects
+    match = False
+    isfirst = True
+    seq = generate_seq()
 
     # figures' setting
     sns.set_style('darkgrid')
     sns.set_context('paper')
+
+    # **
+    # main process
+    # *
 
     # rename columns
     feature_df = feature_df.loc[:, feature_list]
     feature_df.rename(
         columns={feature_list[0]: 'p1', feature_list[1]: 'p2'},
         inplace=True)
-
-    # variables and objects
-    match = False
-    isfirst = True
-    seq = generate_seq()
 
     # initialize class (random)
     sample_df = init_class(feature_df)
