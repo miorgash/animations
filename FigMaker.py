@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-class PlotMaker():
+class FigMaker():
 
     global seq
 
