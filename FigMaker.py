@@ -38,18 +38,18 @@ class FigMaker():
         plt.close()
 
 
-    def develop_samplefig(self):
+    def make_samplefig(self):
         global seq
         self.viz_samples()
         self.save(seq)
 
 
-    def develop_centroidfig(self):
+    def make_centroidfig(self):
         global seq
         self.viz_centroids()
         self.save(seq)
 
-    def develop(self):
+    def make_fig(self):
         global seq
         self.viz_samples()
         self.viz_centroids()
