@@ -1,19 +1,19 @@
 import matplotlib.pyplot as plt
 
-class FigMaker():
+class FigMaker:
 
     global seq
 
-    def __init__(self, samples=None, centroids=None, sample_color=None, centroid_color=None):
+    def __init__(self, samples=None, sample_color=None, centroids=None, centroid_color=None):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(1, 1, 1)
         self.samples = samples
-        self.centroids = centroids
         self.sample_color = sample_color
+        self.centroids = centroids
         self.centroid_color = centroid_color
 
         global seq
-        seq = self.generate_seq(self)
+        seq = self.generate_seq()
 
 
     def generate_seq(self):
@@ -41,18 +41,18 @@ class FigMaker():
     def make_samplefig(self):
         global seq
         self.viz_samples()
-        self.save(seq)
+        self.save(seq.__next__())
 
 
     def make_centroidfig(self):
         global seq
         self.viz_centroids()
-        self.save(seq)
+        self.save(seq.__next__())
 
     def make_fig(self):
         global seq
         self.viz_samples()
         self.viz_centroids()
-        self.save(seq)
+        self.save(seq.__next__())
 
 

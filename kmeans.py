@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 from numpy import random
 from visualize_kmeans import generate_seq, begin, viz_samples, viz_centroids, save
+from FigMaker import FigMaker
 
 def mkmeans(feature_df, feature_list):
 
@@ -66,9 +67,8 @@ def mkmeans(feature_df, feature_list):
     while not match:
 
         # old class
-        fig, ax = begin()
-        viz_samples(ax, feature_df, classes)
-        save(fig, seq.__next__())
+        fm = FigMaker(feature_df, classes)
+        fm.make_samplefig()
 
         if isfirst:
             # calculate centroids
@@ -84,18 +84,15 @@ def mkmeans(feature_df, feature_list):
             match = evaluate(old_centroid_df, centroid_df)
 
         # new centroid / old class
-        fig, ax = begin()
-        viz_samples(ax, feature_df, classes)
-        viz_centroids(ax, centroid_df, centroid_df.index)
-        save(fig, seq.__next__())
+        fm = FigMaker(samples=feature_df, sample_color=classes, centroids=centroid_df, centroid_color=centroid_df.index)
+        fm.make_fig()
 
         # classify
         classes = classify(feature_df, centroid_df)
 
         # new centroid / new class
-        fig, ax = begin()
-        viz_samples(ax, feature_df, classes)
-        viz_centroids(ax, centroid_df, centroid_df.index)
-        save(fig, seq.__next__())
+        fm = FigMaker(samples=feature_df, sample_color=classes, centroids=centroid_df, centroid_color=centroid_df.index)
+        fm.make_samplefig()
+        fm.make_fig()
 
     return feature_df.assign(cls=classes)
